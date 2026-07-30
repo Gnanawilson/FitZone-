@@ -1,0 +1,208 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum ExperienceLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum FitnessGoal {
+  WEIGHT_LOSS
+  MUSCLE_GAIN
+  MAINTAIN
+  ENDURANCE
+  STRENGTH
+}
+
+enum ActivityLevel {
+  SEDENTARY
+  LIGHTLY_ACTIVE
+  MODERATELY_ACTIVE
+  VERY_ACTIVE
+  EXTRA_ACTIVE
+}
+
+model User {
+  id            String          @id @default(cuid())
+  email         String          @unique
+  name          String?
+  avatarUrl     String?
+  password      String?
+  role          Role            @default(USER)
+  age           Int?
+  gender        Gender?
+  height        Float?          // in cm
+  weight        Float?          // in kg
+  goal          FitnessGoal?
+  activityLevel ActivityLevel?
+  streak        Int             @default(0)
+  xp            Int             @default(0)
+  level         Int             @default(1)
+  units         String          @default("METRIC") // METRIC or IMPERIAL
+  theme         String          @default("DARK")   // DARK or LIGHT
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  workoutPlans  WorkoutPlan[]
+  workoutLogs   WorkoutLog[]
+  dietPlans     DietPlan[]
+  bmiRecords    BmiRecord[]
+  progressLogs  ProgressLog[]
+  nutritionLogs NutritionLog[]
+  userBadges    UserBadge[]
+  notifications Notification[]
+}
+
+model WorkoutPlan {
+  id            String      @id @default(cuid())
+  userId        String
+  title         String
+  goal          FitnessGoal
+  level         ExperienceLevel
+  daysPerWeek   Int
+  durationMin   Int
+  estimatedCals Int
+  isAiGenerated Boolean     @default(true)
+  scheduleJson  String      // JSON string of daily routines and exercises
+  createdAt     DateTime    @default(now())
+
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Exercise {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  category    String   // Chest, Back, Legs, Shoulders, Arms, Core
+  equipment   String   // Barbell, Dumbbell, Machine, Bodyweight
+  difficulty  String   // Beginner, Intermediate, Advanced
+  description String
+  videoUrl    String?
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+}
+
+model WorkoutLog {
+  id            String   @id @default(cuid())
+  userId        String
+  workoutName   String
+  durationMin   Int
+  caloriesBurned Int
+  notes         String?
+  completedAt   DateTime @default(now())
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DietPlan {
+  id            String   @id @default(cuid())
+  userId        String
+  title         String
+  calories      Int
+  proteinGrams  Int
+  carbsGrams    Int
+  fatGrams      Int
+  fiberGrams    Int
+  waterLiters   Float
+  mealPlanJson  String   // JSON string of breakfast, lunch, dinner, snacks
+  createdAt     DateTime @default(now())
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model BmiRecord {
+  id         String   @id @default(cuid())
+  userId     String
+  height     Float
+  weight     Float
+  bmi        Float
+  category   String
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ProgressLog {
+  id          String   @id @default(cuid())
+  userId      String
+  weight      Float?
+  bodyFat     Float?
+  sleepHours  Float?
+  waterLiters Float?
+  mood        String?  // Great, Good, Neutral, Tired, Stressed
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model NutritionLog {
+  id          String   @id @default(cuid())
+  userId      String
+  foodName    String
+  mealType    String   // Breakfast, Lunch, Dinner, Snack
+  calories    Int
+  protein     Float
+  carbs       Float
+  fat         Float
+  loggedAt    DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Badge {
+  id          String      @id @default(cuid())
+  name        String      @unique
+  description String
+  icon        String
+  category    String
+  userBadges  UserBadge[]
+}
+
+model UserBadge {
+  id        String   @id @default(cuid())
+  userId    String
+  badgeId   String
+  earnedAt  DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge     Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String   // WORKOUT, WATER, MEAL, SLEEP, SYSTEM
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Announcement {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  author    String
+  createdAt DateTime @default(now())
+}

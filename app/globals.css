@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 6% 7%; /* #101012 Pure Dark Carbon */
+    --foreground: 0 0% 100%; /* #FFFFFF Crisp White Text */
+    --card: 240 5% 12%; /* #1B1B1F Dark Card Surface */
+    --card-foreground: 0 0% 100%;
+    --popover: 240 5% 12%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 18 98% 50%; /* #FC4C02 Strava Signature Orange */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 4% 18%; /* #28282E */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 240 4% 18%;
+    --muted-foreground: 240 5% 70%; /* #A0A0AA High Contrast Muted Text */
+    --accent: 18 98% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 4% 22%; /* #32323A Crisp Dark Border */
+    --input: 240 4% 22%;
+    --ring: 18 98% 50%;
+    --radius: 1rem;
+  }
+}
+
+body {
+  background-color: #101012;
+  color: #FFFFFF;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism utility helpers for dark carbon theme */
+.glass-panel {
+  background: rgba(27, 27, 31, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #090d16;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
