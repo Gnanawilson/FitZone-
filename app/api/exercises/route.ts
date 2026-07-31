@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 const EXERCISE_DATABASE = [
   { id: "e-1", name: "Barbell Bench Press", category: "Chest", equipment: "Barbell", difficulty: "INTERMEDIATE" },
   { id: "e-2", name: "Incline Dumbbell Press", category: "Chest", equipment: "Dumbbells", difficulty: "BEGINNER" },
